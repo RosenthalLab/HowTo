@@ -1,0 +1,3 @@
+# Outputs any errors/warnings which may have cropped up during sam/bam file creation 
+module load picard/2.21.6-Java-11
+java -jar $EBROOTPICARD/picard.jar ValidateSamFile I=input.bam MODE=SUMMARY
