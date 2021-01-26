@@ -1,0 +1,10 @@
+# You must log in to a fast transfer node to obtain files from the NCBI's SRA 
+ssh username@ada-ftn1.tamu.edu
+cd /scratch/user/username/ncbi/public/sra
+
+# Obtain .sra file for Individual A of Species X
+prefetch --output-directory ./ SRR[number]
+
+
+# Obtain .fastq files from Individual A's .sra file
+fastq-dump --defline-seq '@$sn[_$rn]/$ri' --split-files SRR[number].sra
