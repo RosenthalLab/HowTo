@@ -1,0 +1,20 @@
+module load picard/2.21.6-Java-11 
+module load SAMtools/1.10-GCC-9.3.0 
+module load BWA/0.7.17-GCC-8.3.0 
+module load GATK/4.1.5.0-GCCcore-9.3.0-Java-11   
+
+## Map Illumina reads to the reference genome. Include read IDs
+bwa mem -M -R '@RG\tID:Sample.LibraryName\tSM:Sample\tLB:LibraryName\tPU:SingleFlowcell.SingleLane\tPL:ILLUMINA\t' reference.fasta SRR[number]_1.fastq SRR[number]_2.fastq > SRR[number].sam  
+
+## Sort Illumina reads by coordinate
+java -jar $EBROOTPICARD/picard.jar SortSam I=SRR[number].sam O=sorted_SRR[number].sam CREATE_INDEX=true SORT_ORDER=coordinate  
+
+## Remove duplicate reads from sam file
+## *Note: How do I remove sampling error reads?
+java -jar $EBROOTPICARD/picard.jar MarkDuplicates REMOVE_DUPLICATES=true REMOVE_SEQUENCING_DUPLICATES=true I= 'sorted_SRR[number].sam' O= nodup_SRR[number].sam METRICS_FILE= metrics_SRR[number].txt  
+
+## Convert duplicate-free sam file to bam file
+samtools view -S -b nodup_SRR[number].sam > nodup_SRR[number].bam 
+
+## Re-align reads around indels to reduce slippage.
+gatk LeftAlignIndels -R reference.fasta -I nodup_SRR[number].bam -O aligned_SRR[number].bam 
