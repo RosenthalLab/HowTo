@@ -1,0 +1,2 @@
+## Create text file containing all bam files in single location (so program does not need to repeatedly open/close files), then call indels/SNPs in this pileup
+bcftools mpileup -f reference.fasta -b bam_list | bcftools call -o name.vcf
