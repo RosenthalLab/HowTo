@@ -1,0 +1,11 @@
+## Before you align Illumina reads to a reference genome, you must index the reference genome. Genomes in the Rosenthal lab also have invalid characters (";" and "=") which will crash program if not removed. So, you must perform the "sed" operation to rid the file of these characters.
+module load BWA/0.7.17-GCC-8.3.0
+sed 's/;HRSCAF=/_HRSCAF_/g' original_reference_genome > reference.fasta
+bwa index reference.fasta
+
+
+## For most GATK programs, you will ALSO need a .fai file and a .dict file, generated below.
+module load GATK/4.1.5.0-GCCcore-9.3.0-Java-11
+module load SAMtools/1.10-GCC-9.3.0
+samtools faidx reference.fasta
+gatk CreateSequenceDictionary -R reference.fasta
