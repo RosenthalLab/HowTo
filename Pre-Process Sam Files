@@ -7,11 +7,11 @@ module load GATK/4.1.5.0-GCCcore-9.3.0-Java-11
 bwa mem -M -R '@RG\tID:Sample.LibraryName\tSM:Sample\tLB:LibraryName\tPU:SingleFlowcell.SingleLane\tPL:ILLUMINA\t' reference.fasta SRR[number]_1.fastq SRR[number]_2.fastq > SRR[number].sam  
 
 ## Sort Illumina reads by coordinate
-java -jar $EBROOTPICARD/picard.jar SortSam I=SRR[number].sam O=sorted_SRR[number].sam CREATE_INDEX=true SORT_ORDER=coordinate  
+java -jar $EBROOTPICARD/picard.jar SortSam I=SRR[number].sam O=sorted_SRR[number].sam CREATE_INDEX=true SORT_ORDER=coordinate TMP_DIR=$TMPDIR
 
 ## Remove duplicate reads from sam file
 ## *Note: How do I remove sampling error reads?
-java -jar $EBROOTPICARD/picard.jar MarkDuplicates REMOVE_DUPLICATES=true REMOVE_SEQUENCING_DUPLICATES=true I= 'sorted_SRR[number].sam' O= nodup_SRR[number].sam METRICS_FILE= metrics_SRR[number].txt  
+java -jar $EBROOTPICARD/picard.jar MarkDuplicates REMOVE_DUPLICATES=true REMOVE_SEQUENCING_DUPLICATES=true I= 'sorted_SRR[number].sam' O= nodup_SRR[number].sam METRICS_FILE= metrics_SRR[number].txt TMP_DIR=$TMPDIR
 
 ## Convert duplicate-free sam file to bam file
 samtools view -S -b nodup_SRR[number].sam > nodup_SRR[number].bam 
