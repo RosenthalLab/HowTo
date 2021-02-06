@@ -1,0 +1,2 @@
+# Writes a file with the population allele frequencies for a vcf
+vcftools --vcf name.vcf --freq --out output.frq
